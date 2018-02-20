@@ -1,13 +1,19 @@
 {
-  "name": "btle",
-  "version": "1.0.0",
+  "name": "soma-btle-blind-controller",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Josh Anderson",
+  "license": "MIT",
+  "keywords": [
+    "soma",
+    "blind",
+    "btle",
+    "bluetooth"
+  ],
   "dependencies": {
     "noble": "^1.9.0"
   }
