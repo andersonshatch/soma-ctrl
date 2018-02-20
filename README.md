@@ -36,3 +36,6 @@ Where \<position\> is between 0 (fully closed) and 100 (fully open)
 If a device by the name provided as the first argument is not found within a certain time, the progam will quit with exit code 1 and write `timeout of 15 seconds reached (adjustable by TIMEOUT_SECS envvar)` to stderr
 
 Use the `TIMEOUT_SECS` environment variable to control the timeout, default is 15
+
+# Home Assistant
+Check out [this wiki page](https://github.com/andersonshatch/soma-btle-blind-controller/wiki/Using-with-home-assistant-(hass)) for a config example to get this added to [Home Assistant](https://home-assistant.io)
