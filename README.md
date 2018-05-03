@@ -77,6 +77,7 @@ To automatically setup a battery sensor:
 ## Parameters
 
 `<deviceID>` has format `RISEnnn` and cannot be changed
+
 `<deviceName|slugified` will be the device name (as configured in the app) with spaces replaced by underscores
 
 
