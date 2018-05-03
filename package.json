@@ -21,6 +21,14 @@
     "mqtt",
     "homeassistant"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andersonshatch/soma-ctrl"
+  },
+  "bugs": {
+    "url": "https://github.com/andersonshatch/soma-ctrl"
+  },
+  "homepage": "https://github.com/andersonshatch/soma-ctrl#readme",
   "dependencies": {
     "debug": "^3.1.0",
     "express": "^4.16.3",
