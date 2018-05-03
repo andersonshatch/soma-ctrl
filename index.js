@@ -65,8 +65,8 @@ if (!argv.mqttUrl && !argv.expressPort) {
     process.exit(-1);
 }
 
-if (argv.P === true) {
-    argv.P = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
+if (argv.p === true) {
+    argv.p = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
 }
 
 const idsToConnectTo = argv._.filter(name => name.startsWith('RISE'));
@@ -115,7 +115,7 @@ if (!baseTopic.endsWith('/')) {
 let mqttUrl = argv.mqttUrl;
 let mqttBinding = require('./src/MQTTConnector');
 let mqttUsername = argv.mqttUsername;
-let mqttPassword = argv.P;
+let mqttPassword = argv.p;
 
 
 let expressPort = argv.expressPort;
