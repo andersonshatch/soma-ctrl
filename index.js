@@ -1,69 +1,159 @@
-let noble = require('noble');
+#!/usr/bin/env node
 
-let positionCharUUID = "00001525b87f490c92cb11ba5ea5167c";
-let movePercentUUID = "00001526b87f490c92cb11ba5ea5167c";
-let battPercentUUID = "2a19";
+const readlineSync = require('readline-sync');
+const noble = require('noble');
+const log = require('debug')('soma*');
+const debugLog = require('debug')('soma');
+const SomaShade = require('./src/SomaShade');
 
-if (!process.argv[2]) {
-	console.error("No device name supplied (required as first parameter) - format RISEnnn");
-	process.exit(-1);
+const yargs = require('yargs');
+const args = yargs
+    .usage('Usage: $0 --port 3000 --url [mqtt|ws][s]://yourbroker.example.com')
+    .example('$0 -t 60 -p 3000', 'Scan for any devices for 60 seconds, bind webserver to port 3000')
+    .example('$0 -e 2 -p 3000', 'Scan until 2 devices are connected and bind webserver to port 3000')
+    .example('$0 RISE108 RISE117 -url [broker_url]', 'Connect to devices with specific IDs only, publish to MQTT')
+    .options({
+        't': {
+            alias: 'discovery-timeout',
+            describe: 'Number of seconds to scan for devices for (ignored if -e or explicit list of names is specified)',
+            type: 'number',
+            default: 30
+        },
+        'd': {
+            alias: 'debug',
+            describe: 'Enable debug logging',
+            type: 'boolean'
+        },
+        'e': {
+            alias: 'expected-devices',
+            describe: 'Number of blind controller devices you expect to connect to, after which scanning will stop',
+            type: 'number'
+        },
+        'l': {
+            alias: 'express-port',
+            describe: 'Port for express web server (if unset, express will not startup)',
+            type: 'number',
+        },
+        'url': {
+            alias: 'mqtt-url',
+            describe: 'MQTT broker URL',
+        },
+        'topic': {
+            alias: 'mqtt-base-topic',
+            describe: 'Base topic for MQTT',
+            default: 'homeassistant'
+        },
+        'p': {
+            alias: 'mqtt-password',
+            describe: 'Password for MQTT (if not specified as an argument, will prompt for password at startup)'
+        },
+        'u': {
+            alias: 'mqtt-username',
+            describe: 'Username for MQTT'
+        }
+    })
+    .wrap(yargs.terminalWidth())
+    .env('SOMA');
+
+const argv = args.argv;
+
+if (argv.debug) {debugLog.enabled = true;}
+
+if (!argv.mqttUrl && !argv.expressPort) {
+    log('ERROR: Neither --express-port or --mqtt-url supplied, nothing to do');
+    yargs.showHelp();
+    process.exit(-1);
 }
 
-noble.startScanning();
+if (argv.P === true) {
+    argv.P = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
+}
 
-let timeout = process.env.TIMEOUT_SECS || 15;
+const idsToConnectTo = argv._.filter(name => name.startsWith('RISE'));
+const manualIdsWereSpecified = idsToConnectTo.length !== 0;
+if (!manualIdsWereSpecified) {
+    let message = 'No device names supplied, ';
+    if (argv.expectedDevices) {
+        message += 'will stop scanning after ' + argv.expectedDevices + ' device(s) connect';
+    } else {
+        message += 'will stop scanning after ' + argv.discoveryTimeout + ' seconds';
+    }
+    log(message);
+} else {
+    argv.expectedDevices = idsToConnectTo.length;
+}
 
-setTimeout(() => {
-	noble.stopScanning();
-	console.error('timeout of ' + timeout + ' seconds reached (adjustable by TIMEOUT_SECS envvar)');
-	process.exit(1);
-}, timeout * 1000);
+noble.on('stateChange', (state) => {
+    if(state === 'poweredOn') {
+        noble.startScanning();
 
-noble.on('discover', function(peripheral) {
-	//to find a new soma's address, connect to any with advertisement.localName.startsWith("RISE") and the next time discover will include the address (macOS limitation)
-	if (peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
-		peripheral.advertisement.localName === process.argv[2]) {
-		char(peripheral, noble);
-	}
+        if (!manualIdsWereSpecified && !argv.expectedDevices) {
+            //discover until timeout
+            setTimeout(() => {
+                log('stopping scan after timeout');
+                noble.stopScanning();
+            }, 1000 * argv.discoveryTimeout);
+        }
+
+    }
 });
 
-function char(peripheral, noble) {
-	peripheral.connect(function(error) {
-		peripheral.discoverSomeServicesAndCharacteristics([], [positionCharUUID, movePercentUUID, battPercentUUID], function(error, services, characteristics) {
-			if (!process.argv[3]) {
-                let positionChar = characteristics.filter(char => char.uuid === positionCharUUID)[0];
-                positionChar.read((err, readData) => {
-                	let position = readData[0];
-                	console.log(100 - position);
-                	peripheral.disconnect();
-                	process.exit();
-                });
-                return;
-			}
+let devices = {};
 
-			if (process.argv[3] === 'batt') {
-				let battPercentChar = characteristics.filter(char => char.uuid === battPercentUUID)[0];
-				battPercentChar.read((err, readData) => {
-					let batt = readData[0];
-					console.log(batt);
-					peripheral.disconnect();
-					process.exit();
-				});
-				return;
-			}
-
-
-			let movePercentChar = characteristics.filter(char => char.uuid === movePercentUUID)[0];
-			var closePercent = process.argv[3] || 30;
-			closePercent = 100 - closePercent;
-			closePercent = closePercent.toString();
-			movePercentChar.write(Buffer.from([closePercent.toString(16)]), false, function(error) {
-				if (error) {console.log(error); }
-				peripheral.disconnect();
-				noble.stopScanning();
-				process.exit();
-			});
-        });
-    });
-	noble.stopScanning();
+if (argv.expectedDevices) {
+    log('scanning for %d device(s) %o', argv.expectedDevices, manualIdsWereSpecified ? idsToConnectTo : []);
+} else {
+    log('scanning for as many devices until timeout');
 }
+
+let baseTopic = argv.mqttBaseTopic;
+if (!baseTopic.endsWith('/')) {
+    baseTopic = baseTopic + '/';
+}
+
+
+let mqttUrl = argv.mqttUrl;
+let mqttBinding = require('./src/MQTTConnector');
+let mqttUsername = argv.mqttUsername;
+let mqttPassword = argv.P;
+
+
+let expressPort = argv.expressPort;
+if (expressPort) {
+    let WebBinding = require('./src/WebConnector');
+    new WebBinding(devices, expressPort, debugLog);
+}
+
+let loggedStop = false;
+
+noble.on('discover', peripheral => {
+    if (peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
+            peripheral.advertisement.localName.startsWith('RISE')) {
+
+        let id = peripheral.advertisement.localName;
+
+        if (idsToConnectTo.length !== 0 && idsToConnectTo.indexOf(id) === -1) {
+            debugLog('Found %s but will not connect as it was not specified in the list of devices %o', id, idsToConnectTo);
+            return;
+        }
+
+        devices[id] = new SomaShade(id, peripheral, noble);
+        if (argv.debug) {devices[id].log.enabled = true;}
+
+        peripheral.on('connect', () => {
+            log('connected to %s', id);
+            if (argv.expectedDevices &&
+                Object.entries(devices).filter(([, device]) => device.connectionState === 'connected').length === argv.expectedDevices) {
+                if (!loggedStop) {
+                    log('all expected devices connected, stopping scan');
+                    loggedStop = true;
+                }
+                noble.stopScanning();
+            }
+        });
+
+        if (mqttUrl) {
+            new mqttBinding(devices[id], mqttUrl, baseTopic, mqttUsername, mqttPassword);
+        }
+    }
+});

@@ -1,20 +1,35 @@
 {
-  "name": "soma-btle-blind-controller",
-  "version": "0.1.0",
-  "description": "",
+  "name": "soma-ctrl",
+  "version": "1.0.0",
+  "description": "Control Soma BTLE Smart Shade devices by HTTP or MQTT",
   "main": "index.js",
+  "bin": {
+    "somactrl": "index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint **/*.js"
   },
   "author": "Josh Anderson",
   "license": "MIT",
   "keywords": [
     "soma",
+    "smart shade",
     "blind",
     "btle",
-    "bluetooth"
+    "bluetooth",
+    "mqtt",
+    "homeassistant"
   ],
   "dependencies": {
-    "noble": "^1.9.0"
+    "debug": "^3.1.0",
+    "express": "^4.16.3",
+    "mqtt": "^2.17.0",
+    "noble": "^1.9.1",
+    "readline-sync": "^1.4.9",
+    "yargs": "^11.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
   }
 }
