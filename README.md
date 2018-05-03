@@ -27,8 +27,8 @@ Specify a port for the API to listen on with `-l`:
 `somactrl -l 3000`
 
 ## To use with MQTT
-Specify a broker URL with `-url` option:
-`somactrl -url mqtt://yourbroker` (mqtt/mqtts/ws/wss accepted)
+Specify a broker URL with `--url` option:
+`somactrl --url mqtt://yourbroker` (mqtt/mqtts/ws/wss accepted)
 
 Username and password for MQTT may be specified with `-u` and `-p` option
 
