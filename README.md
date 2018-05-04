@@ -40,12 +40,16 @@ Base topic defaults to `homeassistant`, but may be configured with the `-topic` 
 # MQTT
 For each device connected, data will be published to the following topics:
 `<baseTopic>/cover/<deviceID>/position` - position
+
 `<baseTopic>/cover/<deviceID>/connected` - `connected` or `disconnected`
+
 `<baseTopic>/cover/<deviceID>/battery` - battery level
 
 To issue commands:
 Move: `<baseTopic>/cover/<deviceID>/move` - message: int position between 0 (closed) and 100 (open)
+
 Stop: `<baseTopic>/cover/<deviceID>/move` - message: 'stop'
+
 Identify (beep device): `<baseTopic>/cover/<deviceID/identify` - message is ignored
 
 In addition, for use with [Home Assistant MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/):
