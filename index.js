@@ -83,6 +83,8 @@ if (!manualIdsWereSpecified) {
     argv.expectedDevices = idsToConnectTo.length;
 }
 
+let devices = {};
+
 noble.on('stateChange', (state) => {
     if(state === 'poweredOn') {
         noble.startScanning();
@@ -92,13 +94,15 @@ noble.on('stateChange', (state) => {
             setTimeout(() => {
                 log('stopping scan after timeout');
                 noble.stopScanning();
+                if (Object.entries(devices).filter(([, device]) => device.connectionState === 'connected').length === 0) {
+                    log('No devices found, exiting');
+                    process.exit(-2);
+                }
             }, 1000 * argv.discoveryTimeout);
         }
 
     }
 });
-
-let devices = {};
 
 if (argv.expectedDevices) {
     log('scanning for %d device(s) %o', argv.expectedDevices, manualIdsWereSpecified ? idsToConnectTo : []);
