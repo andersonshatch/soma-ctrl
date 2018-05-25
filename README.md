@@ -1,4 +1,4 @@
-# SOMA Blind Controller Util
+# SOMA Blind Controller Util [![npm version](https://badge.fury.io/js/soma-ctrl.svg)](https://badge.fury.io/js/soma-ctrl)
 Util for controlling SOMA smart shade, either over MQTT or via a HTTP API
 
 # Requirements
