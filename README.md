@@ -5,7 +5,7 @@ Util for controlling SOMA smart shade, either over MQTT or via a HTTP API
 - SOMA smart shade device that has been configured with the SOMA app
 - Bluetooth 4.0 LE hardware
 - OS supported by [noble](https://github.com/noble/noble) (I've only tested on macOS)
-- Node (at a guess... some recent version, I'm testing with 9.3.0 installed)
+- Node 7.0 to 9.x (noble currently has issues with 10.x and up)
 
 # Installation
 Run `npm install -g soma-ctrl`
