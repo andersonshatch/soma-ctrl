@@ -1,6 +1,6 @@
 {
   "name": "soma-ctrl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Control Soma BTLE Smart Shade devices by HTTP or MQTT",
   "main": "index.js",
   "bin": {
