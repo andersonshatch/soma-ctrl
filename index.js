@@ -11,7 +11,7 @@ const args = yargs
     .usage('Usage: $0 --express-port 3000 --url [mqtt|ws][s]://yourbroker.example.com')
     .example('$0 -t 60 -l 3000', 'Scan for any devices for 60 seconds, bind webserver to port 3000')
     .example('$0 -e 2 -l 3000', 'Scan until 2 devices are connected and bind webserver to port 3000')
-    .example('$0 RISE108 RISE117 -url [broker_url]', 'Connect to devices with specific IDs only, publish to MQTT')
+    .example('$0 RISE108 RISE117 --url [broker_url]', 'Connect to devices with specific IDs only, publish to MQTT')
     .options({
         't': {
             alias: 'discovery-timeout',
