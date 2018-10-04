@@ -24,6 +24,83 @@ class WebConnector {
             res.json(device.getState());
         });
 
+        this.express.post('/:blindId/calibrateModeStart', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting start calibrate');
+            device.calibrateMode(true);
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/calibrateBottom', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting calibrate bottom');
+            device.calibrate(false);
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/stop', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting stop');
+            device.stop();
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/moveUp', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting move up');
+            device.moveUp();
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/moveDown', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting move down');
+            device.moveDown();
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/calibrateTop', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting calibrate top');
+            device.calibrate(true);
+            res.sendStatus(200);
+        });
+
+        this.express.post('/:blindId/calibrateModeStop', (req, res) => {
+            let device = this.requireDevice(req, res);
+            if (!device) {
+                return;
+            }
+
+            device.log('requesting stop calibrate');
+            device.calibrateMode(false);
+            res.sendStatus(200);
+        });
+
         this.express.post('/:blindId/identify', (req, res) => {
             let device = this.requireDevice(req, res);
             if (!device) {

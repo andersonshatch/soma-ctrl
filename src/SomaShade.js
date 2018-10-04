@@ -190,6 +190,12 @@ class SomaShade extends EventEmitter {
         });
     }
 
+    calibrateMode(start = true) {
+        if (this.calibrateCharacteristic != null) {
+            this.calibrateCharacteristic.write(Buffer.from([start ? 0x76 : 0x36]), false);
+        }
+    }
+
     calibrate(top = true) {
         if (this.calibrateCharacteristic != null) {
             this.calibrateCharacteristic.write(Buffer.from([top ? 0x69 : 0x96]), false);
