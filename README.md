@@ -140,6 +140,20 @@ Response type: `Device` example:
 
 `POST /<deviceID>/stop`: Ask deviceID to stop moving. Response type: `200 - OK` or `404 - Not Found`
 
+`POST /<deviceID>/calibrateModeStart`: Enable calibrate mode on deviceID. Response type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/moveUp`: Request device to move up. Beware that if calibration mode is enabled, the defined top position is not honoured. Response type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/stop`: Request device to stop moving. Response type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/moveDown`: Request device to move down. Beware that if calibration mode is enabled, the defined bottom position is not honoured. Response type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/calibrateTop`: When in calibrate mode, set the current position as the top-most position. Response Type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/calibrateBottom`: When in calibrate mode, set the current position as the bottom-most position. Response Type: `200 - OK` or `404 - Not Found`
+
+`POST /<deviceID>/calibrateModeStop`: Disable calibrate mode on deviceID. Response type; `200 - OK` or `404 - Not Found`
+
 ## Parameters
 
 `<deviceID>` has format `RISEnnn` and cannot be changed
