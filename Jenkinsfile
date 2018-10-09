@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('git') {
       steps {
-        git(url: 'https://github.com/andersonshatch/soma-ctrl.git', branch: 'master', changelog: true)
+        git(url: 'https://github.com/andersonshatch/soma-ctrl.git', branch: 'pipeline-test', changelog: true)
       }
     }
     stage('build') {
