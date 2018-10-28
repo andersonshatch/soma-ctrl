@@ -32,6 +32,13 @@ class MQTTConnector {
             }
         });
 
+        let deviceInfo = {
+            identifiers: `soma_${device.id}`,
+            name: device.id,
+            manufacturer: 'Soma',
+            model: 'Smart Shade'
+        };
+
         let coverConfig = {
             name: device.id,
             state_topic: `${deviceTopic}/position`,
@@ -41,21 +48,28 @@ class MQTTConnector {
             set_position_topic: `${deviceTopic}/move`,
             command_topic: `${deviceTopic}/move`,
             payload_open: '100',
-            payload_close: '0'
+            payload_close: '0',
+            unique_id: `soma_${device.id}_cover`,
+            device: deviceInfo
         };
 
         let battSensorConfig = {
             name: `Cover ${device.id} battery`,
             state_topic: `${deviceTopic}/battery`,
-            unit_of_measurement: '%'
+            unit_of_measurement: '%',
+            device_class: 'battery',
+            unique_id: `soma_${device.id}_battery`,
+            device: deviceInfo
         };
 
         device.log(`mqtt topic ${deviceTopic}`);
 
         device.on('nameChanged', (data) => {
             coverConfig.name = data.name;
+            coverConfig.device.name = data.name;
             mqttClient.publish(`${deviceTopic}/config`, JSON.stringify(coverConfig), {retain: true});
             battSensorConfig.name = `Cover ${data.name} battery`;
+            battSensorConfig.device.name = data.name;
             mqttClient.publish(`${baseTopic}sensor/cover_${data.name.replace(' ', '_')}_battery/config`, JSON.stringify(battSensorConfig), {retain: true});
         });
 
