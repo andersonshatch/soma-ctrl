@@ -70,6 +70,8 @@ if (argv.p === true) {
 }
 
 const idsToConnectTo = argv._.filter(name => name.startsWith('RISE'));
+const idsToIgnore = argv._.filter(name => name.startsWith('_RISE')).map(id => id.substr(1));
+
 const manualIdsWereSpecified = idsToConnectTo.length !== 0;
 if (!manualIdsWereSpecified) {
     let message = 'No device names supplied, ';
@@ -135,6 +137,11 @@ noble.on('discover', peripheral => {
             peripheral.advertisement.localName.startsWith('RISE')) {
 
         let id = peripheral.advertisement.localName;
+
+        if (idsToIgnore.indexOf(id) !== -1) {
+            debugLog('Found %s but will not connect as it is in the ignored ID list', id);
+            return;
+        }
 
         if (idsToConnectTo.length !== 0 && idsToConnectTo.indexOf(id) === -1) {
             debugLog('Found %s but will not connect as it was not specified in the list of devices %o', id, idsToConnectTo);
