@@ -45,6 +45,7 @@ class MQTTConnector {
             availability_topic: `${deviceTopic}/connection`,
             payload_available: 'connected',
             payload_not_available: 'disconnected',
+            position_topic: `${deviceTopic}/position`,
             set_position_topic: `${deviceTopic}/move`,
             command_topic: `${deviceTopic}/move`,
             payload_open: '100',
