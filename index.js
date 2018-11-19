@@ -69,8 +69,8 @@ if (argv.p === true) {
     argv.p = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
 }
 
-const idsToConnectTo = argv._.filter(name => name.startsWith('RISE'));
-const idsToIgnore = argv._.filter(name => name.startsWith('_RISE')).map(id => id.substr(1));
+const idsToConnectTo = argv._;
+const idsToIgnore = argv._.filter(name => name.startsWith('_')).map(id => id.substr(1));
 
 const manualIdsWereSpecified = idsToConnectTo.length !== 0;
 if (!manualIdsWereSpecified) {
@@ -134,7 +134,7 @@ let loggedStop = false;
 
 noble.on('discover', peripheral => {
     if (peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
-            peripheral.advertisement.localName.startsWith('RISE')) {
+            (peripheral.advertisement.localName.startsWith('RISE') || idsToConnectTo.indexOf(peripheral.advertisement.localName) !== -1)) {
 
         let id = peripheral.advertisement.localName;
 
