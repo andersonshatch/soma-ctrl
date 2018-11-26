@@ -69,7 +69,7 @@ if (argv.p === true) {
     argv.p = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
 }
 
-const idsToConnectTo = argv._;
+const idsToConnectTo = argv._.map(name => name.replace(/:/g, ''));
 const idsToIgnore = argv._.filter(name => name.startsWith('_')).map(id => id.substr(1));
 
 const manualIdsWereSpecified = idsToConnectTo.length !== 0;
@@ -133,17 +133,20 @@ if (expressPort) {
 let loggedStop = false;
 
 noble.on('discover', peripheral => {
-    if (peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
-            (peripheral.advertisement.localName.startsWith('RISE') || idsToConnectTo.indexOf(peripheral.advertisement.localName) !== -1)) {
+    if ((peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
+            (peripheral.advertisement.localName.startsWith('RISE') || idsToConnectTo.indexOf(peripheral.advertisement.localName) !== -1)) ||
+			peripheral.address !== undefined && idsToConnectTo.indexOf(peripheral.address.toLowerCase()) !== -1) {
 
-        let id = peripheral.advertisement.localName;
+        let address = peripheral.address !== undefined ? peripheral.address.replace(/:/g, '') : undefined;
+        let localName = peripheral.advertisement !== undefined ? peripheral.advertisement.localName : undefined;
+        let id = localName || address;
 
         if (idsToIgnore.indexOf(id) !== -1) {
             debugLog('Found %s but will not connect as it is in the ignored ID list', id);
             return;
         }
 
-        if (idsToConnectTo.length !== 0 && idsToConnectTo.indexOf(id) === -1) {
+        if (idsToConnectTo.length !== 0 && (idsToConnectTo.indexOf(id) === -1 && idsToConnectTo.indexOf(address) === -1)) {
             debugLog('Found %s but will not connect as it was not specified in the list of devices %o', id, idsToConnectTo);
             return;
         }
