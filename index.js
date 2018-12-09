@@ -96,10 +96,12 @@ noble.on('stateChange', (state) => {
             setTimeout(() => {
                 log('stopping scan after timeout');
                 noble.stopScanning();
-                if (Object.entries(devices).filter(([, device]) => device.connectionState === 'connected').length === 0) {
+                if (Object.keys(devices).length === 0) {
                     log('No devices found, exiting');
                     process.exit(-2);
                 }
+
+                Object.values(devices).forEach((device) => {device.connect();});
             }, 1000 * argv.discoveryTimeout);
         }
 
@@ -171,17 +173,16 @@ noble.on('discover', peripheral => {
         devices[id] = new SomaShade(id, peripheral, noble);
         if (argv.debug) {devices[id].log.enabled = true;}
 
-        peripheral.on('connect', () => {
-            log('connected to %s', id);
-            if (argv.expectedDevices &&
-                Object.entries(devices).filter(([, device]) => device.connectionState === 'connected').length === argv.expectedDevices) {
-                if (!loggedStop) {
-                    log('all expected devices connected, stopping scan');
-                    loggedStop = true;
-                }
-                noble.stopScanning();
+        log('discovered %s', id);
+        if (argv.expectedDevices &&
+            Object.keys(devices).length === argv.expectedDevices) {
+            if (!loggedStop) {
+                log('all expected devices connected, stopping scan');
+                loggedStop = true;
             }
-        });
+            noble.stopScanning();
+            Object.values(devices).forEach((device) => {device.connect();});
+        }
 
         if (mqttUrl) {
             new mqttBinding(devices[id], mqttUrl, baseTopic, mqttUsername, mqttPassword);
