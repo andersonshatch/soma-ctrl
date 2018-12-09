@@ -139,7 +139,12 @@ noble.on('discover', peripheral => {
 
         let address = peripheral.address !== undefined ? peripheral.address.replace(/:/g, '') : undefined;
         let localName = peripheral.advertisement !== undefined ? peripheral.advertisement.localName : undefined;
-        let id = localName || address;
+        let id;
+        if (localName !== undefined && localName.startsWith('RISE')) {
+            id = localName;
+        } else {
+            id = address;
+        }
 
         if (idsToIgnore.indexOf(id) !== -1) {
             debugLog('Found %s but will not connect as it is in the ignored ID list', id);
