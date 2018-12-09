@@ -67,8 +67,6 @@ class SomaShade extends EventEmitter {
             this.emit('connectionStateChanged', this.getState());
         }});
         this._connectionState = 'disconnected';
-
-        this.connect();
     }
 
     move(position) {
