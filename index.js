@@ -130,13 +130,25 @@ if (expressPort) {
     new WebBinding(devices, expressPort, debugLog);
 }
 
+function shouldConnect(peripheral) {
+    if (peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined) {
+        let localName = peripheral.advertisement.localName;
+        if (localName == 'S' || localName.startsWith('RISE') || idsToConnectTo.indexOf(localName) !== -1) {
+            return true;
+        }
+    }
+
+    if (peripheral.id !== undefined && idsToConnectTo.indexOf(peripheral.id.toLowerCase()) !== -1) {
+        return true;
+    }
+
+    return false;
+}
+
 let loggedStop = false;
 
 noble.on('discover', peripheral => {
-    if ((peripheral.advertisement !== undefined && peripheral.advertisement.localName !== undefined &&
-            (peripheral.advertisement.localName.startsWith('RISE') || idsToConnectTo.indexOf(peripheral.advertisement.localName) !== -1)) ||
-			peripheral.address !== undefined && idsToConnectTo.indexOf(peripheral.address.toLowerCase()) !== -1) {
-
+    if (shouldConnect(peripheral)) {
         let address = peripheral.address !== undefined ? peripheral.address.replace(/:/g, '') : undefined;
         let localName = peripheral.advertisement !== undefined ? peripheral.advertisement.localName : undefined;
         let id;
