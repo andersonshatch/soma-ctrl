@@ -18,6 +18,7 @@ You may optionally:
 - Alter the device scanning timeout, e.g. scan for 60 seconds: `somactrl -t 60`
 - Specify the number of devices you expect to connect to, e.g. 4 devices expected: `somactrl -e 4`
 - Manually specify a list of device IDs to connect to, e.g. connect to RISE108 and RISE117: `somactrl RISE108 RISE117`
+- Manually specify a list of MAC addresses to connect to, e.g.: `somactrl f5:11:7b:ee:f3:43`
 
 
 You must then specify options to use either MQTT, HTTP or both
