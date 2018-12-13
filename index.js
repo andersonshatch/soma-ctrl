@@ -69,7 +69,7 @@ if (argv.p === true) {
     argv.p = readlineSync.question('MQTT Password: ', {hideEchoBack: true, mask: ''});
 }
 
-const idsToConnectTo = argv._.map(name => name.replace(/:/g, ''));
+const idsToConnectTo = argv._.filter(name => !name.startsWith('_')).map(name => name.replace(/:/g, ''));
 const idsToIgnore = argv._.filter(name => name.startsWith('_')).map(id => id.substr(1));
 
 const manualIdsWereSpecified = idsToConnectTo.length !== 0;
