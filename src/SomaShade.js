@@ -141,8 +141,16 @@ class SomaShade extends EventEmitter {
             this.log('connected!');
             this._connectionState = 'connected';
 
-            let characteristicsUuids = [positionCharUUID, movePercentUUID, motorCharUUID, battPercentUUID, groupUUID, nameUUID, notifyUUID, calibrateCharUUID];
-            this.peripheral.discoverSomeServicesAndCharacteristics([], characteristicsUuids, (error, services, characteristics) => {
+            let expectedCharUuids = [positionCharUUID, movePercentUUID, motorCharUUID, battPercentUUID, groupUUID, nameUUID, notifyUUID, calibrateCharUUID];
+            this.peripheral.discoverSomeServicesAndCharacteristics([], expectedCharUuids, (error, services, characteristics) => {
+                let discoveredUuids = characteristics.map((char) => char.uuid);
+                let missingCharacteristics = expectedCharUuids.filter((char) => !discoveredUuids.includes(char));
+                if (missingCharacteristics.length !== 0) {
+                    this.log('Missing some characteristics: %o', missingCharacteristics);
+                    this.peripheral.disconnect();
+                    return;
+                }
+
                 this.positionCharacteristic = characteristics.filter(char => char.uuid === positionCharUUID)[0];
                 this.positionCharacteristic.subscribe();
                 this.positionCharacteristic.on('data', (data) => {
