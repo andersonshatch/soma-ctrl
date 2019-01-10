@@ -147,8 +147,6 @@ function shouldConnect(peripheral) {
     return false;
 }
 
-let loggedStop = false;
-
 noble.on('discover', peripheral => {
     if (shouldConnect(peripheral)) {
         let address = peripheral.address !== undefined ? peripheral.address.replace(/:/g, '') : undefined;
@@ -176,10 +174,7 @@ noble.on('discover', peripheral => {
         log('discovered %s', id);
         if (argv.expectedDevices &&
             Object.keys(devices).length === argv.expectedDevices) {
-            if (!loggedStop) {
-                log('all expected devices connected, stopping scan');
-                loggedStop = true;
-            }
+            log('all expected devices connected, stopping scan');
             noble.stopScanning();
             Object.values(devices).forEach((device) => {device.connect();});
         }
