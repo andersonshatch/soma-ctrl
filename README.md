@@ -4,7 +4,7 @@ Util for controlling SOMA smart shade, either over MQTT or via a HTTP API
 # Requirements
 - SOMA smart shade device that has been configured with the SOMA app
 - Bluetooth 4.0 LE hardware
-- OS supported by [noble](https://github.com/noble/noble) (I've only tested on macOS)
+- OS supported by [noble](https://github.com/noble/noble) (I've only tested on macOS and Raspbian)
 - Node 7.0 to 9.x (noble currently has issues with 10.x and up)
 
 # Installation
