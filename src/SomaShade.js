@@ -24,6 +24,7 @@ class SomaShade extends EventEmitter {
         this.positionCharacteristic = null;
 
         this.disconnectHandler = null;
+        this.reconnectHandler = null;
         this.shouldIdentifyOnReconnect = false;
         this.desiredPositionOnReconnect = null;
 
@@ -131,10 +132,15 @@ class SomaShade extends EventEmitter {
 
             this.log('connected for %s seconds', (Math.abs(new Date() - this.connectTime) / 1000));
             this.connect();
+            if (this.reconnectHandler) clearInterval(this.reconnectHandler);
+            this.reconnectHandler = setInterval(() => {
+                this.connect();
+            }, 10*1000);
         });
         this.peripheral.connect((error) => {
             if (error) {this.log(error);}
             if (this.disconnectHandler) clearTimeout(this.disconnectHandler);
+            if (this.reconnectHandler) clearInterval(this.reconnectHandler);
             this.connectTime = new Date();
             this.log('connected!');
             this._connectionState = 'connected';
