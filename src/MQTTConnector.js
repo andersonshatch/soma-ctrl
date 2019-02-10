@@ -51,7 +51,8 @@ class MQTTConnector {
             payload_open: '100',
             payload_close: '0',
             unique_id: `soma_${device.id}_cover`,
-            device: deviceInfo
+            device: deviceInfo,
+            json_attributes_topic: `${deviceTopic}/jsonAttributes`
         };
 
         let battSensorConfig = {
@@ -75,6 +76,7 @@ class MQTTConnector {
         });
 
         device.on('batteryLevelChanged', (data) => {
+            mqttClient.publish(`${deviceTopic}/jsonAttributes`, JSON.stringify({battery_level: data.battery}), {retain: true});
             mqttClient.publish(`${deviceTopic}/battery`, `${data.battery}`, {retain: true});
         });
 
