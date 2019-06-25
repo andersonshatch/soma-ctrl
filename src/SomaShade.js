@@ -133,7 +133,11 @@ class SomaShade extends EventEmitter {
             this.connect();
         });
         this.peripheral.connect((error) => {
-            if (error) {this.log(error);}
+            if (error) {
+                this.log(error);
+                this.peripheral.disconnect();
+                return;
+            }
             if (this.disconnectHandler) clearTimeout(this.disconnectHandler);
             this.connectTime = new Date();
             this.log('connected!');
