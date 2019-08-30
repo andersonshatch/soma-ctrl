@@ -80,9 +80,12 @@ class SomaShade extends EventEmitter {
             this.desiredPositionOnReconnect = position;
             return;
         }
+        var that = this;
         this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, function(error) {
             if (error) {
-                this.log('ERROR writing to position - %o', error);
+                that.log('ERROR writing to position - %o', error);
+            } else if (position != that.position) {
+                that.state = position > that.position ? 'opening' : 'closing';
             }
         });
     }
@@ -92,6 +95,7 @@ class SomaShade extends EventEmitter {
             if (error) {
                 this.log(error);
             } else {
+                this.state = 'opening';
                 this.targetPosition = 100;
             }
         });
@@ -102,6 +106,7 @@ class SomaShade extends EventEmitter {
             if (error) {
                 this.log(error);
             } else {
+                this.state = 'closing';
                 this.targetPosition = 0;
             }
         });
