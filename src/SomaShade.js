@@ -80,12 +80,11 @@ class SomaShade extends EventEmitter {
             this.desiredPositionOnReconnect = position;
             return;
         }
-        var that = this;
-        this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, function(error) {
+        this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, (error) => {
             if (error) {
-                that.log('ERROR writing to position - %o', error);
-            } else if (position != that.position) {
-                that.state = position > that.position ? 'opening' : 'closing';
+                this.log('ERROR writing to position - %o', error);
+            } else if (position != this.position) {
+                this.state = position > this.position ? 'opening' : 'closing';
             }
         });
     }
