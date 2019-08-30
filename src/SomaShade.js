@@ -31,6 +31,7 @@ class SomaShade extends EventEmitter {
         this.group = null;
         this.positionLastChanged = null;
         this.batteryLevelLastChanged = null;
+        this.targetPosition = -1;
         this.state = 'unknown';
 
         this.connectTime = null;
@@ -51,6 +52,7 @@ class SomaShade extends EventEmitter {
 
         Object.defineProperty(this, '_position', {set: function(position) {
             this.position = position;
+            this.targetPosition = position;
             this.positionLastChanged = new Date();
             this.state = this.position === -1 ? 'unknown' : this.position ===  0 ? 'closed' : 'open';
             this.emit('positionChanged', this.getState());
@@ -73,6 +75,7 @@ class SomaShade extends EventEmitter {
         var closePercent = position;
         closePercent = 100 - closePercent;
         closePercent = closePercent.toString();
+        this.targetPosition = position;
         if (this.movePercentCharacteristic == null) {
             this.desiredPositionOnReconnect = position;
             return;
@@ -88,6 +91,8 @@ class SomaShade extends EventEmitter {
         this.motorCharacteristic.write(Buffer.from([0x69]), false, (error) => {
             if (error) {
                 this.log(error);
+            } else {
+                this.targetPosition = 100;
             }
         });
     }
@@ -96,6 +101,8 @@ class SomaShade extends EventEmitter {
         this.motorCharacteristic.write(Buffer.from([0x96]), true, (error) => {
             if (error) {
                 this.log(error);
+            } else {
+                this.targetPosition = 0;
             }
         });
     }
@@ -219,6 +226,7 @@ class SomaShade extends EventEmitter {
             batteryLevelLastChanged: this.batteryLevelLastChanged,
             position: this.position,
             positionLastChanged: this.positionLastChanged,
+            targetPosition: this.targetPosition,
             connectionState: this.connectionState,
             state: this.state,
             group: this.group,
