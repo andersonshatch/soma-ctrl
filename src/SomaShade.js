@@ -76,6 +76,9 @@ class SomaShade extends EventEmitter {
         closePercent = 100 - closePercent;
         closePercent = closePercent.toString();
         this.targetPosition = position;
+        if (position != this.position) {
+            this.state = position > this.position ? 'opening' : 'closing';
+        }
         if (this.movePercentCharacteristic == null) {
             this.desiredPositionOnReconnect = position;
             return;
@@ -83,30 +86,30 @@ class SomaShade extends EventEmitter {
         this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, (error) => {
             if (error) {
                 this.log('ERROR writing to position - %o', error);
-            } else if (position != this.position) {
-                this.state = position > this.position ? 'opening' : 'closing';
             }
         });
     }
 
     moveUp() {
+        if (this.state != 100) {
+            this.state = 'opening';
+        }
+        this.targetPosition = 100;
         this.motorCharacteristic.write(Buffer.from([0x69]), false, (error) => {
             if (error) {
                 this.log(error);
-            } else {
-                this.state = 'opening';
-                this.targetPosition = 100;
             }
         });
     }
 
     moveDown() {
+        if (this.state != 0) {
+            this.state = 'closing';
+        }
+        this.targetPosition = 0;
         this.motorCharacteristic.write(Buffer.from([0x96]), true, (error) => {
             if (error) {
                 this.log(error);
-            } else {
-                this.state = 'closing';
-                this.targetPosition = 0;
             }
         });
     }
