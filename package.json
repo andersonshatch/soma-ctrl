@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/andersonshatch/soma-ctrl#readme",
   "engines": {
-    "node": ">=7.0 <10.0"
+    "node": ">=8.16.0 <13.0"
   },
   "dependencies": {
     "debug": "^4.0.1",
