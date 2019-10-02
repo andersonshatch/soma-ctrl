@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const readlineSync = require('readline-sync');
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 const log = require('debug')('soma*');
 const debugLog = require('debug')('soma');
 const SomaShade = require('./src/SomaShade');
