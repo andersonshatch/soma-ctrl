@@ -172,6 +172,8 @@ Response type: `Device` example:
 
 `POST /<deviceID>/calibrateModeStop`: Disable calibrate mode on deviceID. Response type; `200 - OK` or `404 - Not Found`
 
+`POST /exit`: Quit somactrl (useful if you run with systemd and want to restart). Response type: `200 - OK`
+
 ## Parameters
 
 `<deviceID>` has format `RISEnnn` or the device's MAC address in lowercase, with the colon's stripped out and cannot be changed
