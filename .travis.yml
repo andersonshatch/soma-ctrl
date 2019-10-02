@@ -4,11 +4,11 @@ node_js:
 - '9'
 - '10'
 - '12'
-deploy:
-  provider: npm
-  email: andersonshatch@gmail.com
-  api_key:
-    secure: ZxkVmuOdpLIBUrgwv2w8DZMu0nTYLqRQV0M98xLTt1/NveSdl5WBsvUas+FhmxoLspXFMp6adYQv9/ya3uJLvLdG53uMH7AYqPZiDP8Nby2RI4xUhbopOm2w9Fc1/HPR/RMzJUh9AssEh4QJtSFduO4YiZau/vNIlcvK0BWNNutSwu42iwuSY/iIA00KRNHM02DAvWIjY/t2wBvKdhcvd05CIgnHK58Ks7F0TMEMDsxDsvY9jXv9xTfjcCyLBXWZqUExrNz18SrqBSCLDACq6mrbj2YhZ7GtBQwbT4na3ckPUzApzUaNsBlhipagcUup0Ny53O1LyLXfFufVoIzEqp0RSb77GDnZ8HME3YrQPa1mtyodaUx/YUzgkiPQaCRzJYNBd7vtEmc+vFX8h9MiXYHKaUZHfB84GIU+CpKbih7oAM0hhins/m6OahUJnQdRvZrLRnCM3zRl0BifuqefoODRy+2wNylyFkqfLanu9vYf4I57ZsnIuvXjaNynR3COn48yMGnrDvOA8OEeYt4uQPCxm7XQK/iinrORm0gfHJRN/KsnJ0O9uKXqOQVIH5OLaFIkiGfOuqvY1QIi2Hf25NgxVNub5ResRQbg7HfuG5Tcy+9AtZgyNgUO8DuSJn045UXICJhJAjA9xTpSG4PoOSpUdV928N4aCovPouR3P2c=
-  on:
-    tags: true
-    repo: andersonshatch/soma-ctrl
+#deploy:
+#  provider: npm
+#  email: andersonshatch@gmail.com
+#  api_key:
+#    secure: ZxkVmuOdpLIBUrgwv2w8DZMu0nTYLqRQV0M98xLTt1/NveSdl5WBsvUas+FhmxoLspXFMp6adYQv9/ya3uJLvLdG53uMH7AYqPZiDP8Nby2RI4xUhbopOm2w9Fc1/HPR/RMzJUh9AssEh4QJtSFduO4YiZau/vNIlcvK0BWNNutSwu42iwuSY/iIA00KRNHM02DAvWIjY/t2wBvKdhcvd05CIgnHK58Ks7F0TMEMDsxDsvY9jXv9xTfjcCyLBXWZqUExrNz18SrqBSCLDACq6mrbj2YhZ7GtBQwbT4na3ckPUzApzUaNsBlhipagcUup0Ny53O1LyLXfFufVoIzEqp0RSb77GDnZ8HME3YrQPa1mtyodaUx/YUzgkiPQaCRzJYNBd7vtEmc+vFX8h9MiXYHKaUZHfB84GIU+CpKbih7oAM0hhins/m6OahUJnQdRvZrLRnCM3zRl0BifuqefoODRy+2wNylyFkqfLanu9vYf4I57ZsnIuvXjaNynR3COn48yMGnrDvOA8OEeYt4uQPCxm7XQK/iinrORm0gfHJRN/KsnJ0O9uKXqOQVIH5OLaFIkiGfOuqvY1QIi2Hf25NgxVNub5ResRQbg7HfuG5Tcy+9AtZgyNgUO8DuSJn045UXICJhJAjA9xTpSG4PoOSpUdV928N4aCovPouR3P2c=
+#  on:
+#    tags: true
+#    repo: andersonshatch/soma-ctrl
