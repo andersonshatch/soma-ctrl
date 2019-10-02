@@ -11,10 +11,10 @@ class WebConnector {
     }
 
     setupExpressRoutes() {
-	this.express.post('/exit', (req, res) => {
-		res.sendStatus(200);
-		process.exit(1);
-	});
+        this.express.post('/exit', (req, res) => {
+            res.sendStatus(200);
+            process.exit(1);
+        });
         this.express.get('/', (req, res) => {
             var output = {};
             Object.entries(this.devices).forEach(([id, device]) => output[id] = device.getState());
