@@ -42,5 +42,9 @@
   },
   "devDependencies": {
     "eslint": "^5.1.0"
+  },
+  "funding": {
+    "url": "https://paypal.me/andersonshatch",
+    "type": "paypal"
   }
 }
