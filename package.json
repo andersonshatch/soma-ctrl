@@ -38,7 +38,7 @@
     "mqtt": "^2.18.2",
     "@abandonware/noble": "^1.9.2-1",
     "readline-sync": "^1.4.9",
-    "yargs": "^13.2.2"
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
     "eslint": "^5.1.0"
