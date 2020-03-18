@@ -13,6 +13,7 @@ jobs:
             - run: npm install
             - run: npm test
   contrast-verify:
+    executor: contrastsecurity/default
     steps:
       - contrastsecurity/check-vulnerabilities:
           contrast-url: 'https://apptwo.contrastsecurity.com/Contrast'
