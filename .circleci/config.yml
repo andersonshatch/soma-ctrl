@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  verify: contrastsecurity/verify@0.3.0
 jobs:
   build-and-test:
     executor:
@@ -11,7 +12,14 @@ jobs:
           steps:
             - run: npm install
             - run: npm test
+  contrast-verify:
+    steps:
+      - contrastsecurity/check-vulnerabilities:
+          contrast-url: 'https://apptwo.contrastsecurity.com/Contrast'
+          org-id: '9eb886b2-2cc8-4476-be35-d9fae474c47f'
+          application-id: '44c873eb-803c-4d6e-b7e4-504533b71ca5'
 workflows:
     build-and-test:
       jobs:
         - build-and-test
+        - contrast-verify
