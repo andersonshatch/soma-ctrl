@@ -25,11 +25,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm install -g @contrast/contrast-cli --api_key $CONTRAST_API_KEY --authorization $CONTRAST_AUTHORIZATION --organization_id $CONTRAST_ORG_ID --host $CONTRAST_HOST --application_id $CONTRAST_APPLICATION_ID
+    - run: npm install -g @contrast/contrast-cli
+    - run: contrast-cli --api_key $CONTRAST_API_KEY --authorization $CONTRAST_AUTHORIZATION --organization_id $CONTRAST_ORG_ID --host $CONTRAST_HOST --application_id $CONTRAST_APPLICATION_ID
       env:
         CONTRAST_API_KEY: ${{ secrets.CONTRAST_API_KEY }}
         CONTRAST_AUTHORIZATION: ${{ secrets.CONTRAST_AUTHORIZATION }}
         CONTRAST_ORG_ID: ${{ secrets.CONTRAST_ORG_ID }}
         CONTRAST_HOST: ${{ secrets.CONTRAST_HOST }}
         CONTRAST_APPLICATION_ID: ${{ secrets.CONTRAST_APPLICATION_ID }}
-    - run: contrast-cli 
