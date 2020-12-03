@@ -44,5 +44,5 @@ jobs:
         CONTRAST_OSS_YAML: ${{ secrets.CONTRAST_OSS_YAML }}
     - run: contrast-cli --yamlPath contrast_security.yaml
       name: Contrast OSS Submit
-    - run: contrast-cli -r -f -s high --yamlPath contrast_security.yaml
+    - run: contrast-cli -r -f -s high --yamlPath contrast_security.yaml --silent
       name: Contrast OSS Check
