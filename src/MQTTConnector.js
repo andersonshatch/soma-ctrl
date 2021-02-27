@@ -41,15 +41,14 @@ class MQTTConnector {
 
         let coverConfig = {
             name: device.id,
-            state_topic: `${deviceTopic}/position`,
             availability_topic: `${deviceTopic}/connection`,
             payload_available: 'connected',
             payload_not_available: 'disconnected',
             position_topic: `${deviceTopic}/position`,
             set_position_topic: `${deviceTopic}/move`,
             command_topic: `${deviceTopic}/move`,
-            payload_open: '100',
-            payload_close: '0',
+            payload_open: 100,
+            payload_close: 0,
             unique_id: `soma_${device.id}_cover`,
             device: deviceInfo,
             json_attributes_topic: `${deviceTopic}/jsonAttributes`
