@@ -61,15 +61,14 @@ To automatically setup the cover device:
 ```
 {
     "name": "Living Room1",
-    "state_topic": "homeassistant/cover/RISE148/position",
     "availability_topic": "homeassistant/cover/RISE148/connection",
     "payload_available": "connected",
     "payload_not_available": "disconnected",
     "position_topic": "homeassistant/cover/RISE148/position",
     "set_position_topic": "homeassistant/cover/RISE148/move",
     "command_topic": "homeassistant/cover/RISE148/move",
-    "payload_open": "100",
-    "payload_close": "0",
+    "payload_open": 100,
+    "payload_close": 0,
     "unique_id": "soma_RISE148_cover",
     "device": {
         "identifiers": "soma_RISE148",
