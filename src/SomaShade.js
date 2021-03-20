@@ -31,6 +31,7 @@ class SomaShade extends EventEmitter {
         this.group = null;
         this.positionLastChanged = null;
         this.batteryLevelLastChanged = null;
+        this.targetPosition = -1;
         this.state = 'unknown';
 
         this.connectTime = null;
@@ -51,6 +52,7 @@ class SomaShade extends EventEmitter {
 
         Object.defineProperty(this, '_position', {set: function(position) {
             this.position = position;
+            this.targetPosition = position;
             this.positionLastChanged = new Date();
             this.state = this.position === -1 ? 'unknown' : this.position ===  0 ? 'closed' : 'open';
             this.emit('positionChanged', this.getState());
@@ -73,11 +75,15 @@ class SomaShade extends EventEmitter {
         var closePercent = position;
         closePercent = 100 - closePercent;
         closePercent = closePercent.toString();
+        this.targetPosition = position;
+        if (position != this.position) {
+            this.state = position > this.position ? 'opening' : 'closing';
+        }
         if (this.movePercentCharacteristic == null) {
             this.desiredPositionOnReconnect = position;
             return;
         }
-        this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, function(error) {
+        this.movePercentCharacteristic.write(Buffer.from([closePercent.toString(16)]), false, (error) => {
             if (error) {
                 this.log('ERROR writing to position - %o', error);
             }
@@ -85,6 +91,10 @@ class SomaShade extends EventEmitter {
     }
 
     moveUp() {
+        if (this.state != 100) {
+            this.state = 'opening';
+        }
+        this.targetPosition = 100;
         this.motorCharacteristic.write(Buffer.from([0x69]), false, (error) => {
             if (error) {
                 this.log(error);
@@ -93,6 +103,10 @@ class SomaShade extends EventEmitter {
     }
 
     moveDown() {
+        if (this.state != 0) {
+            this.state = 'closing';
+        }
+        this.targetPosition = 0;
         this.motorCharacteristic.write(Buffer.from([0x96]), true, (error) => {
             if (error) {
                 this.log(error);
@@ -219,6 +233,7 @@ class SomaShade extends EventEmitter {
             batteryLevelLastChanged: this.batteryLevelLastChanged,
             position: this.position,
             positionLastChanged: this.positionLastChanged,
+            targetPosition: this.targetPosition,
             connectionState: this.connectionState,
             state: this.state,
             group: this.group,
