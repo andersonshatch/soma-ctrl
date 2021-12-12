@@ -11,6 +11,45 @@ Util for controlling SOMA smart shade, either over MQTT or via a HTTP API
 # Installation
 Run `npm install -g soma-ctrl`
 
+## Run as a SystemD service
+
+Test your command with all options and be sure everything work as expected before trying the systemd configuration, once confirmed, create the service file:
+`vi /etc/systemd/system/soma-ctrl.service`
+
+and add this to the file:
+
+```
+[Unit]
+Description=soma-ctrl service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=soma-ctrl
+WorkingDirectory=/home/soma-ctrl/
+ExecStart=/usr/bin/node /usr/local/bin/somactrl -d -t TIMEOUT -e NUMBEROFDEVICEEXPECTED --url mqtt://IP/FQDN -u "MQTTUSER" -p "MQTTPASSWORD"
+
+[Install]
+WantedBy=multi-user.target
+```
+Type "i" to enter insert mode and ESC and "wq" to save and quit vi. 
+Replace TIMEOUT,NUMBEROFDEVICEEXPECTED,IP/FQDN,MQTTUSER and MQTTPASSWORD with your configurations.
+Replace "User=soma-ctrl" with your user. If you want to run as non-root user check: https://github.com/noble/noble#running-on-linux Good practice is to create a user specific for this service.
+
+When this service file is modified, you have to run this to make the change effective:
+`sudo systemctl daemon-reload`
+
+Starting service: `$ sudo systemctl start soma-ctrl`
+Stopping service: `$ sudo systemctl stop soma-ctrl`
+Get status: `$ sudo systemctl status soma-ctrl`
+
+In case of problem, add the "-d" flag to somactrl and look in journalctl:
+`journalctl -fu soma-ctrl`
+
+
 # Usage
 `somactrl` by itself will print usage information
 
